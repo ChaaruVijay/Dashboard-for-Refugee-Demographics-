@@ -14,7 +14,6 @@ def load_data():
 
 with st.spinner("Loading data..."):
     df = load_data()
-    df['asylum_country_name'] = df['asylum_country_name'].str.lower().str.strip()
 
 with st.sidebar:
     st.image("https://raw.githubusercontent.com/ChaaruVijay/Dashboard-for-Refugee-Demographics-/main/image_3711c2fd4e.jpg", caption="Sri Lankan Diaspora", width=200)
@@ -22,6 +21,7 @@ with st.sidebar:
     page = st.radio("Go to", ["🏠 Home", "📈 Dashboard"])
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/640px-Flag_of_Sri_Lanka.svg.png", width=150)
     st.image("https://raw.githubusercontent.com/ChaaruVijay/Dashboard-for-Refugee-Demographics-/main/MSF223413(High).jpg", caption="Migration Patterns from Sri Lanka", width=200)
+
 
 # --- HOME PAGE ---
 if page == "🏠 Home":
@@ -33,6 +33,23 @@ if page == "🏠 Home":
     With data on demographics, destinations, and year by year trends, it reveals where they fled, who they were, and what patterns emerged.
     Beneath the numbers lie stories of movement shaped by age, gender, politics, and place. Their stories tell about political, economical
     and cultural changes overtime.
+
+st.subheader("📜 Timeline of Key Events Affecting Sri Lankan Refugees")
+
+events = {
+    1983: "📌 Black July Riots — Triggered the beginning of the civil war.",
+    1990: "📌 Escalation of Civil Conflict — Jaffna conflict displaced thousands.",
+    2002: "📌 Ceasefire Agreement — Brief decline in refugee outflows.",
+    2009: "📌 End of Civil War — Sharp change in migration trends.",
+    2019: "📌 Easter Sunday Attacks — Renewed political tension.",
+    2022: "📌 Economic Crisis — Led to new wave of migration."
+}
+
+selected_year = st.slider("Scroll Through Key Years", min_value=min(events), max_value=max(events), step=1, value=2009)
+if selected_year in events:
+    st.info(f"**{selected_year}:** {events[selected_year]}")
+else:
+    st.write("No major recorded events for this year.")
 
     **Developed by Charuny Vijayaraj** | *University of Westminster* | *Module: 5DATA004W*
     """)
@@ -73,18 +90,9 @@ elif page == "📈 Dashboard":
             st.metric("Children to Adult Ratio", "N/A")
 
     with col3:
-        valid_dest = filtered_df[
-            (filtered_df['asylum_country_name'] != "sri lanka") &
-            (filtered_df['asylum_country_name'].notna())
-        ]
-        if not valid_dest.empty:
-            top_country = (
-                valid_dest
-                .groupby("asylum_country_name")["total"]
-                .sum()
-                .idxmax()
-                .title()
-            )
+        top_dest = filtered_df[filtered_df['asylum_country_name'] != "sri lanka"]
+        if not top_dest.empty:
+            top_country = top_dest.groupby("asylum_country_name")["total"].sum().idxmax().title()
             st.metric("Top Destination", top_country)
         else:
             st.metric("Top Destination", "N/A")
@@ -116,10 +124,7 @@ elif page == "📈 Dashboard":
 
         st.subheader("🌍 Top 10 Asylum Countries")
         top_countries = (
-            filtered_df[
-                (filtered_df['asylum_country_name'] != "sri lanka") &
-                (filtered_df['asylum_country_name'].notna())
-            ]
+            filtered_df[filtered_df['asylum_country_name'] != "sri lanka"]
             .groupby("asylum_country_name")["total"]
             .sum()
             .sort_values(ascending=False)
@@ -138,6 +143,54 @@ elif page == "📈 Dashboard":
         )
         fig_bar.update_layout(yaxis={"categoryorder": "total ascending"})
         st.plotly_chart(fig_bar, use_container_width=True)
+
+        # --- New Refugee Flow Map ---
+        st.subheader("🌐 Global Refugee Flow Map")
+        map_df = (
+            filtered_df[filtered_df['asylum_country_name'] != "sri lanka"]
+            .groupby('asylum_country_name')['total']
+            .sum()
+            .reset_index()
+            .rename(columns={"asylum_country_name": "country"})
+        )
+        fig_map = px.choropleth(
+            map_df,
+            locations="country",
+            locationmode="country names",
+            color="total",
+            color_continuous_scale="Oranges",
+            title="Global Distribution of Sri Lankan Refugees",
+        )
+        st.plotly_chart(fig_map, use_container_width=True)
+
+
+
+    with st.expander("🧭 Sankey: Population Type to Destination"):
+        st.subheader("🧭 Refugee Pathways: Population Type → Destination Country")
+    
+        sankey_df = (
+            filtered_df[filtered_df['asylum_country_name'] != 'sri lanka']
+            .groupby(['population_type', 'asylum_country_name'])['total']
+            .sum()
+            .reset_index()
+    )
+
+        pop_types = sankey_df['population_type'].unique().tolist()
+        countries = sankey_df['asylum_country_name'].unique().tolist()
+
+        labels = pop_types + countries
+        source = sankey_df['population_type'].apply(lambda x: labels.index(x))
+        target = sankey_df['asylum_country_name'].apply(lambda x: labels.index(x))
+        values = sankey_df['total']
+
+        fig_sankey = px.sankey(
+            node=dict(label=labels, pad=15, thickness=20, color="blue"),
+            link=dict(source=source, target=target, value=values),
+            title="Flow from Population Type to Destination Country"
+    )
+
+        st.plotly_chart(fig_sankey, use_container_width=True)
+
 
     # --- Tab 2: Demographics ---
     with tab2:
@@ -196,8 +249,6 @@ elif page == "📈 Dashboard":
         )
         st.plotly_chart(fig_gender, use_container_width=True)
 
-
-    
 # --- Footer ---
 st.markdown("---")
 st.markdown(
