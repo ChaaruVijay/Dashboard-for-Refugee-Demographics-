@@ -15,23 +15,14 @@ def load_data():
 with st.spinner("Loading data..."):
     df = load_data()
 
-# --- Sidebar ---
 with st.sidebar:
     st.image(
         "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/640px-Flag_of_Sri_Lanka.svg.png",
         width=150
     )
     st.markdown("---")
-    st.image(
-        "https://cdn.vectorstock.com/i/1000x1000/75/18/migration-composition-of-mosaic-map-sri-lanka-vector-22875138.webp",
-        caption="Sri Lanka Migration Mosaic",
-        use_column_width=True
-    )
-    st.image(
-        "https://www.dailymirror.lk/image/content_image/2024/07/12/1500x1000_c7019464-764e0cf2-4524a213-b166906d6ec3.jpg",
-        caption="Safe Labour Migration Program - DailyMirror",
-        use_column_width=True
-    )
+    st.image("https://upload.wikimedia.org/wikipedia/commons/5/53/Sri_Lankan_migration_TA.png", caption="Sri Lanka migration routes map")
+    st.image("https://worldmapper.org/maps/migration_from_sri_lanka_1990_2017.png", caption="Migration cartogram 1990–2017")
     st.markdown("---")
     st.title("Refugee Explorer")
     page = st.radio("Go to", ["🏠 Home", "📈 Dashboard"])
