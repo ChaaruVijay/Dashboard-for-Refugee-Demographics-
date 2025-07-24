@@ -17,7 +17,7 @@ with st.spinner("Loading data..."):
 
 with st.sidebar:
     st.image("https://raw.githubusercontent.com/ChaaruVijay/Dashboard-for-Refugee-Demographics-/main/image_3711c2fd4e.jpg", caption="Sri Lankan Diaspora", width=200)
-    st.title("Refugee Explorer")
+    st.title("The Refugee Footprint")
     page = st.radio("Go to", ["🏠 Home", "📈 Dashboard"])
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/640px-Flag_of_Sri_Lanka.svg.png", width=150)
     st.image("https://raw.githubusercontent.com/ChaaruVijay/Dashboard-for-Refugee-Demographics-/main/MSF223413(High).jpg", caption="Migration Patterns from Sri Lanka", width=200)
@@ -25,15 +25,16 @@ with st.sidebar:
 
 # --- HOME PAGE ---
 if page == "🏠 Home":
-    st.title("🌍 Sri Lankan Refugee Dashboard")
+    st.title("🌍 Across Borders: The Sri Lankan Refugee Movement")
     st.markdown("---")
-    st.subheader("About this Project")
+    st.subheader("Following their footprints...")
     st.write("""
-    This dashboard offers insights into the displacement patterns of Sri Lankan refugees.
-    Using data on demographics, destinations, and time trends, we explore how and where Sri Lankans
-    have sought asylum globally.
-    
-    **Developed by Ember** | *University of Westminster* | *Module: 5DATA004W*
+    This dashboard maps the journeys of Sri Lankan refugees — across borders and through time.
+    With data on demographics, destinations, and year by year trends, it reveals where they fled, who they were, and what patterns emerged.
+    Beneath the numbers lie stories of movement shaped by age, gender, politics, and place. Their stories tell about political, economical
+    and cultural changes overtime.
+
+    **Developed by Charuny Vijayaraj** | *University of Westminster* | *Module: 5DATA004W*
     """)
     st.markdown("---")
 
@@ -186,6 +187,6 @@ elif page == "📈 Dashboard":
 # --- Footer ---
 st.markdown("---")
 st.markdown(
-    "<center>Developed by <b>Ember</b> | Module: 5DATA004W | 📅 2025 | Data Source: UNHCR Refugee Database</center>",
+    "<center>Developed by <b>Charuny Vijayaraj</b> | Module: 5DATA004W | 📅 2025 | Data Source: UNHCR Refugee Database</center>",
     unsafe_allow_html=True
 )
