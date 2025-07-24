@@ -4,7 +4,7 @@ import plotly.express as px
 import time
 
 # --- Page Config ---
-st.set_page_config(page_title="Sri Lankan Refugee Dashboard", layout="wide")
+st.set_page_config(page_title="Across Borders: The Srilankan Refugee Movement", layout="wide")
 
 # --- Load Data ---
 @st.cache_data
@@ -21,6 +21,18 @@ with st.sidebar:
         "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/640px-Flag_of_Sri_Lanka.svg.png",
         width=150
     )
+    st.markdown("---")
+    st.image(
+        "https://cdn.vectorstock.com/i/1000x1000/75/18/migration-composition-of-mosaic-map-sri-lanka-vector-22875138.webp",
+        caption="Sri Lanka Migration Mosaic",
+        use_column_width=True
+    )
+    st.image(
+        "https://www.dailymirror.lk/image/content_image/2024/07/12/1500x1000_c7019464-764e0cf2-4524a213-b166906d6ec3.jpg",
+        caption="Safe Labour Migration Program - DailyMirror",
+        use_column_width=True
+    )
+    st.markdown("---")
     st.title("Refugee Explorer")
     page = st.radio("Go to", ["🏠 Home", "📈 Dashboard"])
 
