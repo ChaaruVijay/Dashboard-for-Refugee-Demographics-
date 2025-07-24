@@ -6,7 +6,7 @@ import seaborn as sns
 st.set_page_config(page_title="Sri Lankan Refugee Dashboard", layout="wide")
 
 # Load dataset once, clean column names
-df = pd.read_csv(r'C:\Users\USER\Desktop\DSPL ICW\clean_refugee_data.csv')
+df = pd.read_csv(r'C:\Users\USER\clean_refugee_data.csv')
 df.columns = df.columns.str.strip().str.lower()
 
 st.title("Sri Lankan Refugee Data Dashboard......")
