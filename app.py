@@ -4,28 +4,24 @@ import plotly.express as px
 import time
 
 # --- Page Config ---
-st.set_page_config(page_title="Across Borders: The Srilankan Refugee Movement", layout="wide")
+st.set_page_config(page_title="Sri Lankan Refugee Dashboard", layout="wide")
 
 # --- Load Data ---
 @st.cache_data
 def load_data():
     time.sleep(1)  # Simulate delay
-    return pd.read_csv("refugee_data_cleaned.csv")
+    return pd.read_csv("clean_refugee_data.csv")
 
 with st.spinner("Loading data..."):
     df = load_data()
 
 with st.sidebar:
-    st.image(
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/640px-Flag_of_Sri_Lanka.svg.png",
-        width=150
-    )
-    st.markdown("---")
-    st.image("https://upload.wikimedia.org/wikipedia/commons/5/53/Sri_Lankan_migration_TA.png", caption="Sri Lanka migration routes map")
-    st.image("https://worldmapper.org/maps/migration_from_sri_lanka_1990_2017.png", caption="Migration cartogram 1990–2017")
-    st.markdown("---")
+    st.image("https://raw.githubusercontent.com/ChaaruVijay/Dashboard-for-Refugee-Demographics-/main/image_3711c2fd4e.jpg", caption="Sri Lankan Diaspora", width=200)
     st.title("Refugee Explorer")
     page = st.radio("Go to", ["🏠 Home", "📈 Dashboard"])
+    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/640px-Flag_of_Sri_Lanka.svg.png", width=150)
+    st.image("https://raw.githubusercontent.com/ChaaruVijay/Dashboard-for-Refugee-Demographics-/main/MSF223413(High).jpg", caption="Migration Patterns from Sri Lanka", width=200)
+
 
 # --- HOME PAGE ---
 if page == "🏠 Home":
