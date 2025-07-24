@@ -196,6 +196,8 @@ elif page == "📈 Dashboard":
         )
         st.plotly_chart(fig_gender, use_container_width=True)
 
+
+    
 # --- Footer ---
 st.markdown("---")
 st.markdown(
