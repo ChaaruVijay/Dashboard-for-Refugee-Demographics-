@@ -14,6 +14,7 @@ def load_data():
 
 with st.spinner("Loading data..."):
     df = load_data()
+    df['asylum_country_name'] = df['asylum_country_name'].str.lower().str.strip()
 
 with st.sidebar:
     st.image("https://raw.githubusercontent.com/ChaaruVijay/Dashboard-for-Refugee-Demographics-/main/image_3711c2fd4e.jpg", caption="Sri Lankan Diaspora", width=200)
@@ -21,7 +22,6 @@ with st.sidebar:
     page = st.radio("Go to", ["🏠 Home", "📈 Dashboard"])
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/640px-Flag_of_Sri_Lanka.svg.png", width=150)
     st.image("https://raw.githubusercontent.com/ChaaruVijay/Dashboard-for-Refugee-Demographics-/main/MSF223413(High).jpg", caption="Migration Patterns from Sri Lanka", width=200)
-
 
 # --- HOME PAGE ---
 if page == "🏠 Home":
@@ -73,9 +73,18 @@ elif page == "📈 Dashboard":
             st.metric("Children to Adult Ratio", "N/A")
 
     with col3:
-        top_dest = filtered_df[filtered_df['asylum_country_name'] != "sri lanka"]
-        if not top_dest.empty:
-            top_country = top_dest.groupby("asylum_country_name")["total"].sum().idxmax().title()
+        valid_dest = filtered_df[
+            (filtered_df['asylum_country_name'] != "sri lanka") &
+            (filtered_df['asylum_country_name'].notna())
+        ]
+        if not valid_dest.empty:
+            top_country = (
+                valid_dest
+                .groupby("asylum_country_name")["total"]
+                .sum()
+                .idxmax()
+                .title()
+            )
             st.metric("Top Destination", top_country)
         else:
             st.metric("Top Destination", "N/A")
@@ -107,7 +116,10 @@ elif page == "📈 Dashboard":
 
         st.subheader("🌍 Top 10 Asylum Countries")
         top_countries = (
-            filtered_df[filtered_df['asylum_country_name'] != "sri lanka"]
+            filtered_df[
+                (filtered_df['asylum_country_name'] != "sri lanka") &
+                (filtered_df['asylum_country_name'].notna())
+            ]
             .groupby("asylum_country_name")["total"]
             .sum()
             .sort_values(ascending=False)
