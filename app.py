@@ -37,13 +37,25 @@ if page == "🏠 Home":
     
     Their stories tell about political, economic, and cultural changes over time.
              
-
+    
 
     """)
 
+    st.markdown(" <br><br>", unsafe_allow_html=True)
+
+    st.subheader("📈 Snapshot Overview")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Years Covered", f"{df['year'].nunique()}")
+    with col2:
+        st.metric("Unique Destinations", f"{df['asylum_country_name'].nunique()}")
+    with col3:
+        peak_year = df.groupby("year")["total"].sum().idxmax()
+        st.metric("Peak Year", f"{peak_year}")
 
 
-
+  
+    st.markdown(" <br><br>", unsafe_allow_html=True)
 
     st.subheader("📜 Timeline of Key Events Affecting Sri Lankan Refugees")
     st.write("""
@@ -65,24 +77,13 @@ if page == "🏠 Home":
         """)
     
 
-
-
-    st.subheader("📈 Snapshot Overview")
-
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("Years Covered", f"{df['year'].nunique()}")
-    with col2:
-        st.metric("Unique Destinations", f"{df['asylum_country_name'].nunique()}")
-    with col3:
-        peak_year = df.groupby("year")["total"].sum().idxmax()
-        st.metric("Peak Year", f"{peak_year}")
-
-
     st.markdown("---")
+    
 
     st.markdown(
+
         "> ❝ Refugees are not numbers. They are people who have faces, names, and stories. ❞ – António Guterres"
+
     )
 
 
@@ -210,7 +211,36 @@ elif page == "📈 Dashboard":
         )
         st.plotly_chart(fig_demo, use_container_width=True)
 
-    
+                # First, copy the relevant columns to melt
+        gender_age_columns = [
+            'female_adolescent', 'female_adult', 'female_elderly',
+            'female_children', 'male_adolescent', 'male_adult',
+            'male_elderly', 'male_children'
+        ]
+
+        melted_df = df.melt(
+            id_vars=['year'],
+            value_vars=gender_age_columns,
+            var_name='gender_age',
+            value_name='count'
+        )
+
+        # Step 2: Extract gender and age_group from the column name
+        melted_df['gender'] = melted_df['gender_age'].str.extract(r'^(female|male)')
+        melted_df['age_group'] = melted_df['gender_age'].str.extract(r'_(adolescent|adult|elderly|children)')
+
+        # Step 3: Drop the old column
+        melted_df.drop(columns='gender_age', inplace=True)
+
+        fig = px.treemap(
+        melted_df,
+        path=['year', 'gender', 'age_group'],
+        values='count',
+        color='age_group',
+        title='Treemap of Refugees by Year, Gender, and Age Group'
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
 
 
     # --- Tab 3: Age Ratio ---
