@@ -228,4 +228,4 @@ elif page == "📈 Dashboard":
             title="Gender & Age Group Trends Over Years",
             labels={'count': 'Number of Refugees', 'year': 'Year', 'age_group': 'Age Group'}
         )
-        st.plotly_chart(fig_line, use_container_width=True)
+        
