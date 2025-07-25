@@ -160,6 +160,32 @@ elif page == "📈 Dashboard":
         )
         st.plotly_chart(fig_treemap, use_container_width=True)
 
+        
+        st.subheader("🏙️ Urban vs Rural Population Breakdown")
+
+        # Count the occurrences of each category in urban_rural
+        urban_rural_counts = filtered_df['urban_rural'].value_counts().reset_index()
+        urban_rural_counts.columns = ['Area Type', 'Count']
+
+        # Optional: Map short codes to full names if needed
+        mapping = {
+            'c': 'City',
+            'v': 'Village',
+            'u': 'Urban',
+            'r': 'Rural'
+        }
+        urban_rural_counts['Area Type'] = urban_rural_counts['Area Type'].map(mapping).fillna(urban_rural_counts['Area Type'])
+
+        fig_pie = px.pie(
+            urban_rural_counts,
+            names='Area Type',
+            values='Count',
+            title='Population Distribution by Urban vs Rural',
+            color_discrete_sequence=px.colors.qualitative.Pastel1
+        )
+        fig_pie.update_traces(textposition='inside', textinfo='percent+label')
+        st.plotly_chart(fig_pie, use_container_width=True)
+
 
     # --- Tab 3: Gender & Age Trends ---
     with tab3:
