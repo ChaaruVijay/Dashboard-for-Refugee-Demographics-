@@ -25,7 +25,7 @@ with st.sidebar:
 
 # --- HOME PAGE ---
 if page == "🏠 Home":
-    st.title("🌍 Across Borders: The Sri Lankan Refugee Movement")
+    st.title("🌍 Across Borders: The Sri Lankan Refugee ")
     st.markdown("---")
     st.subheader("Following their footprints...")
     st.write("""
