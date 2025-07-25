@@ -115,12 +115,79 @@ elif page == "📈 Dashboard":
         st.plotly_chart(fig_map, use_container_width=True)
 
     # --- Tab 2: Demographics ---
+    # --- Tab 2: Demographics ---
     with tab2:
-        st.subheader("🧬 Population Type Breakdown")
-        pop_counts = filtered_df['population_type'].value_counts().reset_index()
-        pop_counts.columns = ['Population Type', 'Count']
-        fig_demo = px.bar(pop_counts, x='Population Type', y='Count', color='Count', color_continuous_scale='deep')
-        st.plotly_chart(fig_demo, use_container_width=True)
+        st.subheader("🧬 Refugee Demographics Overview")
+
+        st.markdown("Understand the composition of Sri Lankan refugees by type, gender, and age.")
+
+        with st.expander("📌 Population Type Breakdown", expanded=True):
+            pop_counts = filtered_df['population_type'].value_counts().reset_index()
+            pop_counts.columns = ['Population Type', 'Count']
+
+            fig_donut = px.pie(
+                pop_counts,
+                names='Population Type',
+                values='Count',
+                title="Refugee Population Types (Donut Chart)",
+                hole=0.45,
+                color_discrete_sequence=px.colors.qualitative.Set2
+            )
+            fig_donut.update_traces(textposition='inside', textinfo='percent+label')
+            st.plotly_chart(fig_donut, use_container_width=True)
+
+        with st.expander("🌳 Age & Gender Treemap"):
+            gender_age_columns = [
+                'female_adolescent', 'female_adult', 'female_elderly',
+                'female_children', 'male_adolescent', 'male_adult',
+                'male_elderly', 'male_children'
+            ]
+
+            melted_df = df.melt(
+                id_vars=['year'],
+                value_vars=gender_age_columns,
+                var_name='gender_age',
+                value_name='count'
+            )
+            melted_df['gender'] = melted_df['gender_age'].str.extract(r'^(female|male)')
+            melted_df['age_group'] = melted_df['gender_age'].str.extract(r'_(adolescent|adult|elderly|children)')
+            melted_df.drop(columns='gender_age', inplace=True)
+
+            selected_year = st.selectbox("Select a Year to Explore:", sorted(df['year'].unique(), reverse=True))
+            yearly_df = melted_df[melted_df['year'] == selected_year]
+
+            fig_treemap = px.treemap(
+                yearly_df,
+                path=[px.Constant("Refugees"), 'gender', 'age_group'],
+                values='count',
+                color='age_group',
+                title=f"Treemap: {selected_year} Refugees by Gender and Age Group",
+                color_discrete_map={
+                    "children": "#FFA07A",
+                    "adolescent": "#20B2AA",
+                    "adult": "#778899",
+                    "elderly": "#DAA520"
+                }
+            )
+            fig_treemap.update_traces(root_color="lightgrey", hovertemplate='<b>%{label}</b><br>Count: %{value}')
+            st.plotly_chart(fig_treemap, use_container_width=True)
+
+        with st.expander("📊 Optional: Age Group Trends by Gender (All Years)"):
+            stack_df = melted_df.groupby(['year', 'gender', 'age_group'])['count'].sum().reset_index()
+
+            fig_stack = px.bar(
+                stack_df,
+                x='year',
+                y='count',
+                color='age_group',
+                barmode='stack',
+                facet_col='gender',
+                title='Age Group Distribution by Gender Over Time',
+                labels={'count': 'Population Count'},
+                color_discrete_sequence=px.colors.qualitative.Set1
+            )
+            fig_stack.update_layout(height=500)
+            st.plotly_chart(fig_stack, use_container_width=True)
 
     # --- Tab 3: Gender & Age ---
     with tab3:
