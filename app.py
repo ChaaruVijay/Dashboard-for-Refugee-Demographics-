@@ -36,19 +36,48 @@ if page == "🏠 Home":
     Beneath the numbers lie stories of movement shaped by age, gender, politics, and place..... 
     
     Their stories tell about political, economic, and cultural changes over time.
+             
+
+
     """)
+
+
+
+
 
     st.subheader("📜 Timeline of Key Events Affecting Sri Lankan Refugees")
     st.write("""
-    1983: "📌 Black July Riots — Triggered the beginning of the civil war.",
-        1990: "📌 Escalation of Civil Conflict — Jaffna conflict displaced thousands.",
-        2002: "📌 Ceasefire Agreement — Brief decline in refugee outflows.",
-        2009: "📌 End of Civil War — Sharp change in migration trends.",
-        2019: "📌 Easter Sunday Attacks — Renewed political tension.",
-        2022: "📌 Economic Crisis — Led to new wave of migration."
+    1983: "📌 Black July Riots — Triggered the beginning of the civil war."
+             
+    1990: "📌 Escalation of Civil Conflict — Jaffna conflict displaced thousands."
+             
+    2002: "📌 Ceasefire Agreement — Brief decline in refugee outflows."
+             
+    2009: "📌 End of Civil War — Sharp change in migration trends."
+             
+    2019: "📌 Easter Sunday Attacks — Renewed political tension."
+             
+    2022: "📌 Economic Crisis — Led to new wave of migration."
+             
     
+             
+
         """)
     
+
+
+
+    st.subheader("📈 Snapshot Overview")
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Years Covered", f"{df['year'].nunique()}")
+    with col2:
+        st.metric("Unique Destinations", f"{df['asylum_country_name'].nunique()}")
+    with col3:
+        peak_year = df.groupby("year")["total"].sum().idxmax()
+        st.metric("Peak Year", f"{peak_year}")
+
 
     st.markdown("---")
 
