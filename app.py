@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import time
+import plotly.graph_objects as go
 
 # --- Page Config ---
 st.set_page_config(page_title="Sri Lankan Refugee Dashboard", layout="wide")
@@ -25,35 +26,36 @@ with st.sidebar:
 
 # --- HOME PAGE ---
 if page == "🏠 Home":
-    st.title("🌍 Across Borders: The Sri Lankan Refugee ")
+    st.title("🌍 Across Borders: The Sri Lankan Refugee Movement")
     st.markdown("---")
+
     st.subheader("Following their footprints...")
     st.write("""
     This dashboard maps the journeys of Sri Lankan refugees — across borders and through time.
     With data on demographics, destinations, and year by year trends, it reveals where they fled, who they were, and what patterns emerged.
-    Beneath the numbers lie stories of movement shaped by age, gender, politics, and place. Their stories tell about political, economical
-    and cultural changes overtime.
-
-st.subheader("📜 Timeline of Key Events Affecting Sri Lankan Refugees")
-
-events = {
-    1983: "📌 Black July Riots — Triggered the beginning of the civil war.",
-    1990: "📌 Escalation of Civil Conflict — Jaffna conflict displaced thousands.",
-    2002: "📌 Ceasefire Agreement — Brief decline in refugee outflows.",
-    2009: "📌 End of Civil War — Sharp change in migration trends.",
-    2019: "📌 Easter Sunday Attacks — Renewed political tension.",
-    2022: "📌 Economic Crisis — Led to new wave of migration."
-}
-
-selected_year = st.slider("Scroll Through Key Years", min_value=min(events), max_value=max(events), step=1, value=2009)
-if selected_year in events:
-    st.info(f"**{selected_year}:** {events[selected_year]}")
-else:
-    st.write("No major recorded events for this year.")
-
-    **Developed by Charuny Vijayaraj** | *University of Westminster* | *Module: 5DATA004W*
+    Beneath the numbers lie stories of movement shaped by age, gender, politics, and place..... 
+    
+    Their stories tell about political, economic, and cultural changes over time.
     """)
+
+    st.subheader("📜 Timeline of Key Events Affecting Sri Lankan Refugees")
+    st.write("""
+    1983: "📌 Black July Riots — Triggered the beginning of the civil war.",
+        1990: "📌 Escalation of Civil Conflict — Jaffna conflict displaced thousands.",
+        2002: "📌 Ceasefire Agreement — Brief decline in refugee outflows.",
+        2009: "📌 End of Civil War — Sharp change in migration trends.",
+        2019: "📌 Easter Sunday Attacks — Renewed political tension.",
+        2022: "📌 Economic Crisis — Led to new wave of migration."
+    
+        """)
+    
+
     st.markdown("---")
+
+    st.markdown(
+        "> ❝ Refugees are not numbers. They are people who have faces, names, and stories. ❞ – António Guterres"
+    )
+
 
 # --- DASHBOARD PAGE ---
 elif page == "📈 Dashboard":
@@ -163,35 +165,6 @@ elif page == "📈 Dashboard":
         )
         st.plotly_chart(fig_map, use_container_width=True)
 
-
-
-    with st.expander("🧭 Sankey: Population Type to Destination"):
-        st.subheader("🧭 Refugee Pathways: Population Type → Destination Country")
-    
-        sankey_df = (
-            filtered_df[filtered_df['asylum_country_name'] != 'sri lanka']
-            .groupby(['population_type', 'asylum_country_name'])['total']
-            .sum()
-            .reset_index()
-    )
-
-        pop_types = sankey_df['population_type'].unique().tolist()
-        countries = sankey_df['asylum_country_name'].unique().tolist()
-
-        labels = pop_types + countries
-        source = sankey_df['population_type'].apply(lambda x: labels.index(x))
-        target = sankey_df['asylum_country_name'].apply(lambda x: labels.index(x))
-        values = sankey_df['total']
-
-        fig_sankey = px.sankey(
-            node=dict(label=labels, pad=15, thickness=20, color="blue"),
-            link=dict(source=source, target=target, value=values),
-            title="Flow from Population Type to Destination Country"
-    )
-
-        st.plotly_chart(fig_sankey, use_container_width=True)
-
-
     # --- Tab 2: Demographics ---
     with tab2:
         st.subheader("🧬 Population Type Breakdown")
@@ -207,6 +180,9 @@ elif page == "📈 Dashboard":
             color_continuous_scale='deep'
         )
         st.plotly_chart(fig_demo, use_container_width=True)
+
+    
+
 
     # --- Tab 3: Age Ratio ---
     with tab3:
