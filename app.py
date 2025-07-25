@@ -180,7 +180,7 @@ elif page == "📈 Dashboard":
             urban_rural_counts,
             names='Area Type',
             values='Count',
-            title='Population Distribution by Urban vs Rural',
+            title='Migration Distribution to Urban vs Rural',
             color_discrete_sequence=px.colors.qualitative.Pastel1
         )
         fig_pie.update_traces(textposition='inside', textinfo='percent+label')
